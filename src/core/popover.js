@@ -32,6 +32,7 @@ export default class Popover extends Element {
       currentIndex: 0,
       showButtons: true,
       closeBtnText: 'Close',
+      showFooterOnHighlight: false,
       doneBtnText: 'Done',
       startBtnText: 'Next &rarr;',
       nextBtnText: 'Next &rarr;',
@@ -156,7 +157,9 @@ export default class Popover extends Element {
     this.closeBtnNode.innerHTML = this.options.closeBtnText;
 
     // If there was only one item, hide the buttons
-    if (!this.options.showButtons || !this.options.totalCount || this.options.totalCount === 1) {
+    if (!this.options.showButtons ||
++        !this.options.totalCount ||
++        (!this.options.showFooterOnHighlight && this.options.totalCount === 1)) {
       this.footerNode.style.display = 'none';
       return;
     }
@@ -241,11 +244,9 @@ export default class Popover extends Element {
 
     this.tipNode.classList.add('top');
   }
-
   /**
    * Automatically positions the popover around the given position
    * such that the element and popover remain in view
-   * @todo add the left and right positioning decisions
    * @param {Position} elementPosition
    * @private
    */
@@ -254,15 +255,34 @@ export default class Popover extends Element {
     const popoverSize = this.getSize();
 
     const pageHeight = pageSize.height;
+    const pageHeight = pageSize.width;
     const popoverHeight = popoverSize.height;
+    const popoverWidth = popoverSize.width;
     const popoverMargin = this.options.padding + 10;  // adding 10 to give it a little distance from the element
 
-    const pageHeightAfterPopOver = elementPosition.bottom + popoverHeight + popoverMargin;
+    //useful popover positions after each type of positionning
+    const bottomCoordinateAfterBottomPositionning = elementPosition.bottom + popoverHeight + popoverMargin*2;
+    const topCoordinateAfterTopPositionning = elementPosition.top - popoverHeight - popoverMargin*2;
+    const leftCoordinateAfterLeftPositionning = elementPosition.left - popoverWidth - popoverMargin*2;
+    const rightCoordinateAfterRightPositionning = elementPosition.right + popoverWidth + popoverMargin*2;
 
-    // If adding popover would go out of the window height, then show it to the top
-    if (pageHeightAfterPopOver >= pageHeight) {
+    var canBeTop = topCoordinateAfterTopPositionning > 0;
+    var canBeBottom = bottomCoordinateAfterBottomPositionning < pageHeight;
+    var canBeLeft = leftCoordinateAfterLeftPositionning > 0;
+    var canBeRight = rightCoordinateAfterRightPositionning < pageWidth;
+
+    if ( canBeTop ) {
       this.positionOnTop(elementPosition);
-    } else {
+    } elseif(canBeBottom) {
+      this.positionOnBottom(elementPosition);
+    } elseif(canBeLeft){
+      this.positionOnLeft(elementPosition);
+    } elseif(canBeRight){
+      this.positionOnRight(elementPosition);
+    } else{
+      //Arbitrarily default position to bottom,
+      //because of left to right / top to bottom
+      //reading of most languages
       this.positionOnBottom(elementPosition);
     }
   }

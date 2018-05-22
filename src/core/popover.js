@@ -255,7 +255,7 @@ export default class Popover extends Element {
     const popoverSize = this.getSize();
 
     const pageHeight = pageSize.height;
-    const pageHeight = pageSize.width;
+    const pageWidth = pageSize.width;
     const popoverHeight = popoverSize.height;
     const popoverWidth = popoverSize.width;
     const popoverMargin = this.options.padding + 10;  // adding 10 to give it a little distance from the element
@@ -273,11 +273,11 @@ export default class Popover extends Element {
 
     if ( canBeTop ) {
       this.positionOnTop(elementPosition);
-    } elseif(canBeBottom) {
+    } else if( canBeBottom ) {
       this.positionOnBottom(elementPosition);
-    } elseif(canBeLeft){
+    } else if( canBeLeft ){
       this.positionOnLeft(elementPosition);
-    } elseif(canBeRight){
+    } else if( canBeRight ){
       this.positionOnRight(elementPosition);
     } else{
       //Arbitrarily default position to bottom,

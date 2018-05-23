@@ -157,9 +157,7 @@ export default class Popover extends Element {
     this.closeBtnNode.innerHTML = this.options.closeBtnText;
 
     // If there was only one item, hide the buttons
-    if (!this.options.showButtons ||
-+        !this.options.totalCount ||
-+        (!this.options.showFooterOnHighlight && this.options.totalCount === 1)) {
+    if (!this.options.showButtons || !this.options.totalCount || (!this.options.showFooterOnHighlight && this.options.totalCount === 1)) {
       this.footerNode.style.display = 'none';
       return;
     }
@@ -255,34 +253,35 @@ export default class Popover extends Element {
     const popoverSize = this.getSize();
 
     const pageHeight = pageSize.height;
-    const pageHeight = pageSize.width;
+    const pageWidth = pageSize.width;
     const popoverHeight = popoverSize.height;
     const popoverWidth = popoverSize.width;
     const popoverMargin = this.options.padding + 10;  // adding 10 to give it a little distance from the element
 
-    //useful popover positions after each type of positionning
-    const bottomCoordinateAfterBottomPositionning = elementPosition.bottom + popoverHeight + popoverMargin*2;
-    const topCoordinateAfterTopPositionning = elementPosition.top - popoverHeight - popoverMargin*2;
-    const leftCoordinateAfterLeftPositionning = elementPosition.left - popoverWidth - popoverMargin*2;
-    const rightCoordinateAfterRightPositionning = elementPosition.right + popoverWidth + popoverMargin*2;
+    // useful popover positions after each type of positionning
+    const bottomCoordinateAfterBottomPositionning = (elementPosition.bottom + popoverHeight) + (popoverMargin * 2);
+    const topCoordinateAfterTopPositionning = (elementPosition.top - popoverHeight) - (popoverMargin * 2);
+    const leftCoordinateAfterLeftPositionning = (elementPosition.left - popoverWidth) - (popoverMargin * 2);
+    const rightCoordinateAfterRightPositionning = (elementPosition.right + popoverWidth) + (popoverMargin * 2);
 
-    var canBeTop = topCoordinateAfterTopPositionning > 0;
-    var canBeBottom = bottomCoordinateAfterBottomPositionning < pageHeight;
-    var canBeLeft = leftCoordinateAfterLeftPositionning > 0;
-    var canBeRight = rightCoordinateAfterRightPositionning < pageWidth;
+    const canBeRight = rightCoordinateAfterRightPositionning < pageWidth;
+    const canBeTop = (topCoordinateAfterTopPositionning > 0) && canBeRight;
+    const canBeBottom = (bottomCoordinateAfterBottomPositionning < pageHeight) && canBeRight;
+    const canBeLeft = leftCoordinateAfterLeftPositionning > 0;
 
-    if ( canBeTop ) {
+    // defaults to top position if there is space for it,
+    // because top is read first in most languages.
+    // If the screen is too small in every directions, defaults to bottom
+    // because reading is from top to bottom in most languages.
+    if (canBeTop) {
       this.positionOnTop(elementPosition);
-    } elseif(canBeBottom) {
+    } else if (canBeBottom) {
       this.positionOnBottom(elementPosition);
-    } elseif(canBeLeft){
+    } else if (canBeLeft) {
       this.positionOnLeft(elementPosition);
-    } elseif(canBeRight){
+    } else if (canBeRight) {
       this.positionOnRight(elementPosition);
-    } else{
-      //Arbitrarily default position to bottom,
-      //because of left to right / top to bottom
-      //reading of most languages
+    } else {
       this.positionOnBottom(elementPosition);
     }
   }

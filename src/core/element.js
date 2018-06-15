@@ -76,9 +76,23 @@ export default class Element {
   scrollManually() {
     const elementRect = this.node.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + this.window.pageYOffset;
-    const middle = absoluteElementTop - (this.window.innerHeight / 2);
-
-    this.window.scrollTo(0, middle);
+    // const middle = absoluteElementTop - (this.window.innerHeight / 2);
+    const paddingWidth = 20;
+    if (absoluteElementTop >= 20) {
+      // this.window.scrollTo(0, absoluteElementTop - paddingWidth);
+      this.window.scroll({
+        top: absoluteElementTop - paddingWidth,
+        left: 0,
+        behavior: 'smooth',
+      });
+    } else {
+      // this.window.scrollTo(0, absoluteElementTop);
+      this.window.scroll({
+        top: absoluteElementTop,
+        left: 0,
+        behavior: 'smooth',
+      });
+    }
   }
 
   /**
@@ -90,21 +104,26 @@ export default class Element {
       return;
     }
 
+    if (this.options.enableAutoScrolling) {
+      this.scrollManually();
+      // this.node.scrollIntoView();
+    }
     // If browser does not support scrollIntoView
-    if (!this.node.scrollIntoView) {
-      this.scrollManually();
-      return;
-    }
+    // if (!this.node.scrollIntoView) {
+    // this.scrollManually();
+    // return;
+    // }
 
-    try {
-      this.node.scrollIntoView(this.options.scrollIntoViewOptions || {
-        behavior: 'instant',
-        block: 'center',
-      });
-    } catch (e) {
-      // `block` option is not allowed in older versions of firefox, scroll manually
-      this.scrollManually();
-    }
+    // try {
+    //
+    // this.node.scrollIntoView(this.options.scrollIntoViewOptions || {
+    // behavior: 'instant',
+    // block: 'center',
+    // });
+    // } catch (e) {
+    // // `block` option is not allowed in older versions of firefox, scroll manually
+    // this.scrollManually();
+    // }
   }
 
   /**

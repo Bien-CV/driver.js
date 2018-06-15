@@ -16,6 +16,7 @@ import {
   SHOULD_OUTSIDE_CLICK_CLOSE,
   SHOULD_OUTSIDE_CLICK_NEXT,
   ALLOW_KEYBOARD_CONTROL,
+  SCROLLING_ENABLED,
 } from './common/constants';
 import Stage from './core/stage';
 import { isDomElement } from './common/utils';
@@ -33,6 +34,7 @@ export default class Driver {
       opacity: OVERLAY_OPACITY, // Overlay opacity
       padding: OVERLAY_PADDING, // Spacing around the element from the overlay
       scrollIntoViewOptions: null,  // Options to be passed to `scrollIntoView`
+      enableAutoScrolling: SCROLLING_ENABLED,  // Options to be passed to `scrollIntoView`
       allowClose: SHOULD_OUTSIDE_CLICK_CLOSE,    // Whether to close overlay on click outside the element
       keyboardControl: ALLOW_KEYBOARD_CONTROL,  // Whether to allow controlling through keyboard or not
       overlayClickNext: SHOULD_OUTSIDE_CLICK_NEXT,  // Whether to move next on click outside the element

@@ -75,10 +75,10 @@ export default class Element {
    */
   scrollManually() {
     const elementRect = this.node.getBoundingClientRect();
-    const absoluteElementTop = elementRect.top + this.window.pageYOffset;
+    const absoluteElementTop = (elementRect.top) + this.window.pageYOffset;
     // const middle = absoluteElementTop - (this.window.innerHeight / 2);
-    const paddingWidth = 20;
-    if (absoluteElementTop >= 20) {
+    const paddingWidth = 300;
+    if (absoluteElementTop > paddingWidth) {
       // this.window.scrollTo(0, absoluteElementTop - paddingWidth);
       this.window.scroll({
         top: absoluteElementTop - paddingWidth,
@@ -88,7 +88,7 @@ export default class Element {
     } else {
       // this.window.scrollTo(0, absoluteElementTop);
       this.window.scroll({
-        top: absoluteElementTop,
+        top: 0,
         left: 0,
         behavior: 'smooth',
       });

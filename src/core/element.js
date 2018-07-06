@@ -75,24 +75,14 @@ export default class Element {
    */
   scrollManually() {
     const elementRect = this.node.getBoundingClientRect();
-    const absoluteElementTop = (elementRect.top) + this.window.pageYOffset;
-    // const middle = absoluteElementTop - (this.window.innerHeight / 2);
-    const paddingWidth = 300;
-    if (absoluteElementTop > paddingWidth) {
-      // this.window.scrollTo(0, absoluteElementTop - paddingWidth);
-      this.window.scroll({
-        top: absoluteElementTop - paddingWidth,
-        left: 0,
-        behavior: 'smooth',
-      });
-    } else {
-      // this.window.scrollTo(0, absoluteElementTop);
-      this.window.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
-    }
+    const absoluteElementTop = elementRect.top + this.window.pageYOffset;
+    const elementHeight = elementRect.bottom - elementRect.top;
+    const middle = absoluteElementTop - (this.window.innerHeight / 2) - (elementHeight / 2);
+    this.window.scroll({
+      top: middle,
+      left: 0,
+      behavior: 'smooth',
+    });
   }
 
   /**
@@ -105,6 +95,7 @@ export default class Element {
     }
 
     if (this.options.enableAutoScrolling) {
+      console.log('Element was not in view.');
       this.scrollManually();
       // this.node.scrollIntoView();
     }
@@ -214,11 +205,6 @@ export default class Element {
     this.addHighlightClasses();
 
     const highlightedElement = this;
-    const popoverElement = this.popover;
-
-    if (popoverElement && !popoverElement.isInView()) {
-      popoverElement.bringInView();
-    }
 
     if (!highlightedElement.isInView()) {
       highlightedElement.bringInView();
